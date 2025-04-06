@@ -20,7 +20,13 @@ function createPuzzle(containerId, imagePath) {
     piece.dataset.index = i;
     piece.dataset.correct = pos;
 
-    piece.addEventListener("click", () => onPieceClick(containerId, i));
+    // Agregar los atributos para drag and drop
+    piece.setAttribute("draggable", true);
+    piece.addEventListener("dragstart", dragStart);
+    piece.addEventListener("dragover", dragOver);
+    piece.addEventListener("drop", dropPiece);
+    piece.addEventListener("dragend", dragEnd);
+
     container.appendChild(piece);
   });
 
@@ -32,20 +38,42 @@ function reshuffle(containerId, imagePath) {
   document.getElementById("message").classList.add("hidden");
 }
 
-let currentSelection = {};
+let draggedPiece = null;
 
-function onPieceClick(containerId, index) {
-  const container = document.getElementById(containerId);
-  if (!currentSelection[containerId]) {
-    currentSelection[containerId] = index;
-    highlightPiece(container, index, true);
-  } else {
-    swapPieces(container, currentSelection[containerId], index);
-    highlightPiece(container, currentSelection[containerId], false);
-    currentSelection[containerId] = null;
+function dragStart(event) {
+  draggedPiece = event.target;
+  setTimeout(() => {
+    draggedPiece.classList.add("dragging");
+  }, 0);
+}
 
+function dragEnd() {
+  draggedPiece.classList.remove("dragging");
+  draggedPiece = null;
+}
+
+function dragOver(event) {
+  event.preventDefault();
+}
+
+function dropPiece(event) {
+  event.preventDefault();
+  const container = event.target.closest(".puzzle-container");
+
+  if (!container || container === draggedPiece.parentElement) return;
+
+  const targetPiece = event.target;
+
+  if (targetPiece.classList.contains("piece")) {
+    const draggedIndex = draggedPiece.dataset.index;
+    const targetIndex = targetPiece.dataset.index;
+
+    // Intercambiar las piezas visualmente
+    swapPieces(container, draggedPiece, targetPiece);
+
+    // Verificar si el rompecabezas está resuelto
     if (isSolved(container)) {
-      solved[containerId] = true;
+      solved[container.id] = true;
       if (solved.puzzle1 && solved.puzzle2) {
         document.getElementById("message").classList.remove("hidden");
       }
@@ -53,19 +81,14 @@ function onPieceClick(containerId, index) {
   }
 }
 
-function highlightPiece(container, index, highlight) {
-  const piece = container.children[index];
-  piece.style.outline = highlight ? "2px solid crimson" : "none";
-}
+function swapPieces(container, draggedPiece, targetPiece) {
+  const tempPosition = draggedPiece.style.backgroundPosition;
+  draggedPiece.style.backgroundPosition = targetPiece.style.backgroundPosition;
+  targetPiece.style.backgroundPosition = tempPosition;
 
-function swapPieces(container, i, j) {
-  const temp = container.children[i].style.backgroundPosition;
-  container.children[i].style.backgroundPosition = container.children[j].style.backgroundPosition;
-  container.children[j].style.backgroundPosition = temp;
-
-  const tempCorrect = container.children[i].dataset.correct;
-  container.children[i].dataset.correct = container.children[j].dataset.correct;
-  container.children[j].dataset.correct = tempCorrect;
+  const tempCorrect = draggedPiece.dataset.correct;
+  draggedPiece.dataset.correct = targetPiece.dataset.correct;
+  targetPiece.dataset.correct = tempCorrect;
 }
 
 function isSolved(container) {

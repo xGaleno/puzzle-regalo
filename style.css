@@ -36,7 +36,6 @@ main {
   flex-wrap: wrap;
   justify-content: center;
   gap: 50px;
-  margin-top: 20px;
 }
 
 .puzzle-section {
@@ -47,7 +46,6 @@ main {
   box-shadow: 4px 4px 0 rgba(0,0,0,0.05);
   max-width: 340px;
   text-align: center;
-  width: 100%;
 }
 
 .puzzle-container {
@@ -83,18 +81,10 @@ button {
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 15px;
 }
 
 button:hover {
   background-color: #444;
-}
-
-.puzzle-description {
-  font-size: 1rem;
-  margin-top: 10px;
-  color: #444;
-  text-align: justify;
 }
 
 #message {
@@ -122,7 +112,6 @@ button:hover {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Diseño responsive */
 @media (max-width: 768px) {
   main {
     flex-direction: column;
@@ -136,9 +125,5 @@ button:hover {
   .puzzle-container {
     width: 80%;
     height: 80%;
-  }
-
-  .puzzle-description {
-    margin-top: 20px;
   }
 }

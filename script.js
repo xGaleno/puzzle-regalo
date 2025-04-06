@@ -68,7 +68,15 @@ function dropPiece(event) {
   if (targetPiece === draggedPiece) return; // No intercambiar con la misma pieza
 
   // Intercambiar las posiciones visualmente
-  swapPieces(draggedPiece, targetPiece);
+  const draggedPosition = draggedPiece.style.backgroundPosition;
+  draggedPiece.style.backgroundPosition = targetPiece.style.backgroundPosition;
+  targetPiece.style.backgroundPosition = draggedPosition;
+
+  const draggedCorrect = draggedPiece.dataset.correct;
+  const targetCorrect = targetPiece.dataset.correct;
+
+  draggedPiece.dataset.correct = targetCorrect;
+  targetPiece.dataset.correct = draggedCorrect;
 
   // Verificar si el rompecabezas está resuelto
   const container = draggedPiece.parentElement;
@@ -78,20 +86,6 @@ function dropPiece(event) {
       document.getElementById("message").classList.remove("hidden");
     }
   }
-}
-
-function swapPieces(draggedPiece, targetPiece) {
-  const draggedPosition = draggedPiece.style.backgroundPosition;
-  const targetPosition = targetPiece.style.backgroundPosition;
-
-  draggedPiece.style.backgroundPosition = targetPosition;
-  targetPiece.style.backgroundPosition = draggedPosition;
-
-  const draggedCorrect = draggedPiece.dataset.correct;
-  const targetCorrect = targetPiece.dataset.correct;
-
-  draggedPiece.dataset.correct = targetCorrect;
-  targetPiece.dataset.correct = draggedCorrect;
 }
 
 function isSolved(container) {

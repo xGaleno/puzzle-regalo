@@ -3,27 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dos puzzles para ti ❤️</title>
+  <title>The Love Times 📰❤️</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Arma estos puzzles y descubre algo especial 💖</h1>
+  <header>
+    <h1>The Love Times</h1>
+    <p class="subtitle">Edición Especial – Puzzle para Martina</p>
+  </header>
 
-  <div id="puzzles-wrapper">
-    <div class="puzzle-section">
+  <main id="puzzles-wrapper">
+    <section class="puzzle-section">
       <h2>Puzzle 1</h2>
       <div class="puzzle-container" id="puzzle1"></div>
-    </div>
+      <button onclick="reshuffle('puzzle1', 'img/nosotros.png')">Volver a mezclar 🌀</button>
+    </section>
 
-    <div class="puzzle-section">
+    <section class="puzzle-section">
       <h2>Puzzle 2</h2>
       <div class="puzzle-container" id="puzzle2"></div>
-    </div>
-  </div>
+      <button onclick="reshuffle('puzzle2', 'img/martina.png')">Volver a mezclar 🌀</button>
+    </section>
+  </main>
 
   <div id="message" class="hidden">
-    <h2>¡Completaste ambos puzzles! 💌</h2>
-    <p>Eres mi sol en los días nublados. Te amo con todo mi ser.</p>
+    <h2>¡Completaste ambos puzzles! 🖋️</h2>
+    <p>Mi amor por ti es la historia más hermosa que se ha escrito.</p>
   </div>
 
   <script src="script.js"></script>

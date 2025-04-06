@@ -7,6 +7,8 @@ createPuzzle("puzzle2", "img/martina.png");
 
 function createPuzzle(containerId, imagePath) {
   const container = document.getElementById(containerId);
+  container.innerHTML = ""; // limpiar antes de agregar
+
   let positions = [...Array(totalPieces).keys()];
   shuffleArray(positions);
 
@@ -21,6 +23,13 @@ function createPuzzle(containerId, imagePath) {
     piece.addEventListener("click", () => onPieceClick(containerId, i));
     container.appendChild(piece);
   });
+
+  solved[containerId] = false;
+}
+
+function reshuffle(containerId, imagePath) {
+  createPuzzle(containerId, imagePath);
+  document.getElementById("message").classList.add("hidden");
 }
 
 let currentSelection = {};
@@ -46,7 +55,7 @@ function onPieceClick(containerId, index) {
 
 function highlightPiece(container, index, highlight) {
   const piece = container.children[index];
-  piece.style.border = highlight ? "2px solid #ff69b4" : "none";
+  piece.style.outline = highlight ? "2px solid crimson" : "none";
 }
 
 function swapPieces(container, i, j) {

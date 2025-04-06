@@ -7,7 +7,7 @@ createPuzzle("puzzle2", "img/martina.png");
 
 function createPuzzle(containerId, imagePath) {
   const container = document.getElementById(containerId);
-  container.innerHTML = ""; // limpiar antes de agregar
+  container.innerHTML = ""; // Limpiar antes de agregar nuevas piezas
 
   let positions = [...Array(totalPieces).keys()];
   shuffleArray(positions);
@@ -24,7 +24,6 @@ function createPuzzle(containerId, imagePath) {
     piece.setAttribute("draggable", true);
     piece.addEventListener("dragstart", dragStart);
     piece.addEventListener("dragover", dragOver);
-    piece.addEventListener("dragenter", dragEnter);
     piece.addEventListener("drop", dropPiece);
     piece.addEventListener("dragend", dragEnd);
 
@@ -54,11 +53,7 @@ function dragEnd() {
 }
 
 function dragOver(event) {
-  event.preventDefault(); // Permitir la colocación del elemento
-}
-
-function dragEnter(event) {
-  event.preventDefault();
+  event.preventDefault(); // Permitir la colocación de la pieza arrastrada
 }
 
 function dropPiece(event) {
@@ -67,11 +62,14 @@ function dropPiece(event) {
 
   if (targetPiece === draggedPiece) return; // No intercambiar con la misma pieza
 
-  const draggedIndex = draggedPiece.dataset.index;
-  const targetIndex = targetPiece.dataset.index;
-
   // Intercambiar las posiciones visualmente
-  swapPieces(draggedPiece, targetPiece);
+  const draggedPosition = draggedPiece.style.backgroundPosition;
+  draggedPiece.style.backgroundPosition = targetPiece.style.backgroundPosition;
+  targetPiece.style.backgroundPosition = draggedPosition;
+
+  const draggedCorrect = draggedPiece.dataset.correct;
+  draggedPiece.dataset.correct = targetPiece.dataset.correct;
+  targetPiece.dataset.correct = draggedCorrect;
 
   // Verificar si el rompecabezas está resuelto
   const container = draggedPiece.parentElement;
@@ -81,20 +79,6 @@ function dropPiece(event) {
       document.getElementById("message").classList.remove("hidden");
     }
   }
-}
-
-function swapPieces(draggedPiece, targetPiece) {
-  const draggedPosition = draggedPiece.style.backgroundPosition;
-  const targetPosition = targetPiece.style.backgroundPosition;
-
-  draggedPiece.style.backgroundPosition = targetPosition;
-  targetPiece.style.backgroundPosition = draggedPosition;
-
-  const draggedCorrect = draggedPiece.dataset.correct;
-  const targetCorrect = targetPiece.dataset.correct;
-
-  draggedPiece.dataset.correct = targetCorrect;
-  targetPiece.dataset.correct = draggedCorrect;
 }
 
 function isSolved(container) {

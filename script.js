@@ -20,10 +20,11 @@ function createPuzzle(containerId, imagePath) {
     piece.dataset.index = i;
     piece.dataset.correct = pos;
 
-    // Agregar los atributos para drag and drop
+    // Habilitar para ser arrastrado
     piece.setAttribute("draggable", true);
     piece.addEventListener("dragstart", dragStart);
     piece.addEventListener("dragover", dragOver);
+    piece.addEventListener("dragenter", dragEnter);
     piece.addEventListener("drop", dropPiece);
     piece.addEventListener("dragend", dragEnd);
 
@@ -53,42 +54,47 @@ function dragEnd() {
 }
 
 function dragOver(event) {
+  event.preventDefault(); // Permitir la colocación del elemento
+}
+
+function dragEnter(event) {
   event.preventDefault();
 }
 
 function dropPiece(event) {
   event.preventDefault();
-  const container = event.target.closest(".puzzle-container");
-
-  if (!container || container === draggedPiece.parentElement) return;
-
   const targetPiece = event.target;
 
-  if (targetPiece.classList.contains("piece")) {
-    const draggedIndex = draggedPiece.dataset.index;
-    const targetIndex = targetPiece.dataset.index;
+  if (targetPiece === draggedPiece) return; // No intercambiar con la misma pieza
 
-    // Intercambiar las piezas visualmente
-    swapPieces(container, draggedPiece, targetPiece);
+  const draggedIndex = draggedPiece.dataset.index;
+  const targetIndex = targetPiece.dataset.index;
 
-    // Verificar si el rompecabezas está resuelto
-    if (isSolved(container)) {
-      solved[container.id] = true;
-      if (solved.puzzle1 && solved.puzzle2) {
-        document.getElementById("message").classList.remove("hidden");
-      }
+  // Intercambiar las posiciones visualmente
+  swapPieces(draggedPiece, targetPiece);
+
+  // Verificar si el rompecabezas está resuelto
+  const container = draggedPiece.parentElement;
+  if (isSolved(container)) {
+    solved[container.id] = true;
+    if (solved.puzzle1 && solved.puzzle2) {
+      document.getElementById("message").classList.remove("hidden");
     }
   }
 }
 
-function swapPieces(container, draggedPiece, targetPiece) {
-  const tempPosition = draggedPiece.style.backgroundPosition;
-  draggedPiece.style.backgroundPosition = targetPiece.style.backgroundPosition;
-  targetPiece.style.backgroundPosition = tempPosition;
+function swapPieces(draggedPiece, targetPiece) {
+  const draggedPosition = draggedPiece.style.backgroundPosition;
+  const targetPosition = targetPiece.style.backgroundPosition;
 
-  const tempCorrect = draggedPiece.dataset.correct;
-  draggedPiece.dataset.correct = targetPiece.dataset.correct;
-  targetPiece.dataset.correct = tempCorrect;
+  draggedPiece.style.backgroundPosition = targetPosition;
+  targetPiece.style.backgroundPosition = draggedPosition;
+
+  const draggedCorrect = draggedPiece.dataset.correct;
+  const targetCorrect = targetPiece.dataset.correct;
+
+  draggedPiece.dataset.correct = targetCorrect;
+  targetPiece.dataset.correct = draggedCorrect;
 }
 
 function isSolved(container) {

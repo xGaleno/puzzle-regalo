@@ -24,6 +24,7 @@ function createPuzzle(containerId, imagePath) {
     piece.setAttribute("draggable", true);
     piece.addEventListener("dragstart", dragStart);
     piece.addEventListener("dragover", dragOver);
+    piece.addEventListener("dragenter", dragEnter);
     piece.addEventListener("drop", dropPiece);
     piece.addEventListener("dragend", dragEnd);
 
@@ -56,6 +57,10 @@ function dragOver(event) {
   event.preventDefault(); // Permitir la colocación de la pieza arrastrada
 }
 
+function dragEnter(event) {
+  event.preventDefault();
+}
+
 function dropPiece(event) {
   event.preventDefault();
   const targetPiece = event.target;
@@ -63,13 +68,7 @@ function dropPiece(event) {
   if (targetPiece === draggedPiece) return; // No intercambiar con la misma pieza
 
   // Intercambiar las posiciones visualmente
-  const draggedPosition = draggedPiece.style.backgroundPosition;
-  draggedPiece.style.backgroundPosition = targetPiece.style.backgroundPosition;
-  targetPiece.style.backgroundPosition = draggedPosition;
-
-  const draggedCorrect = draggedPiece.dataset.correct;
-  draggedPiece.dataset.correct = targetPiece.dataset.correct;
-  targetPiece.dataset.correct = draggedCorrect;
+  swapPieces(draggedPiece, targetPiece);
 
   // Verificar si el rompecabezas está resuelto
   const container = draggedPiece.parentElement;
@@ -79,6 +78,20 @@ function dropPiece(event) {
       document.getElementById("message").classList.remove("hidden");
     }
   }
+}
+
+function swapPieces(draggedPiece, targetPiece) {
+  const draggedPosition = draggedPiece.style.backgroundPosition;
+  const targetPosition = targetPiece.style.backgroundPosition;
+
+  draggedPiece.style.backgroundPosition = targetPosition;
+  targetPiece.style.backgroundPosition = draggedPosition;
+
+  const draggedCorrect = draggedPiece.dataset.correct;
+  const targetCorrect = targetPiece.dataset.correct;
+
+  draggedPiece.dataset.correct = targetCorrect;
+  targetPiece.dataset.correct = draggedCorrect;
 }
 
 function isSolved(container) {

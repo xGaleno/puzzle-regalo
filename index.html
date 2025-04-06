@@ -1,35 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Love Times 📰❤️</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzles Románticos</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>The Love Times</h1>
-    <p class="subtitle">Edición Especial – Puzzle para Martina</p>
+    <h1>Recuerdos en Piezas</h1>
   </header>
 
-  <main id="puzzles-wrapper">
+  <main>
     <section class="puzzle-section">
-      <h2>Puzzle 1</h2>
       <div class="puzzle-container" id="puzzle1"></div>
-      <button onclick="reshuffle('puzzle1', 'img/nosotros.png')">Volver a mezclar 🌀</button>
+      <div class="puzzle-description">
+        <h2>Nosotros en Paracas</h2>
+        <p>
+          Esta imagen captura un momento especial en Paracas, donde compartimos un hermoso día bajo el sol y disfrutamos de la naturaleza juntos. 
+          Un recuerdo imborrable que siempre será parte de nuestra historia.
+        </p>
+      </div>
     </section>
 
     <section class="puzzle-section">
-      <h2>Puzzle 2</h2>
+      <div class="puzzle-description">
+        <h2>Martina, la pequeña turista</h2>
+        <p>
+          Esta foto muestra a Martina de niña, con su carita cansada después de un día lleno de turismo. A pesar del cansancio, 
+          su sonrisa siempre tiene un brillo especial que ilumina todo a su alrededor.
+        </p>
+      </div>
       <div class="puzzle-container" id="puzzle2"></div>
-      <button onclick="reshuffle('puzzle2', 'img/martina.png')">Volver a mezclar 🌀</button>
     </section>
   </main>
 
   <div id="message" class="hidden">
-    <h2>¡Completaste ambos puzzles! 🖋️</h2>
-    <p>Mi amor por ti es la historia más hermosa que se ha escrito.</p>
+    <p>¡Rompecabezas resuelto!</p>
   </div>
+
+  <button onclick="reshuffle('puzzle1', 'img/nosotros.png')">Mezclar Puzzle 1</button>
+  <button onclick="reshuffle('puzzle2', 'img/martina.png')">Mezclar Puzzle 2</button>
 
   <script src="script.js"></script>
 </body>

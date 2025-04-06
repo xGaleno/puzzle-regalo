@@ -1,53 +1,55 @@
-const container = document.getElementById("puzzle-container");
-const message = document.getElementById("message");
-
 const size = 3;
 const totalPieces = size * size;
-let positions = [];
+let solved = { puzzle1: false, puzzle2: false };
 
-function createPuzzle() {
-  // Inicializa posiciones
-  positions = [...Array(totalPieces).keys()];
+createPuzzle("puzzle1", "img/nosotros.png");
+createPuzzle("puzzle2", "img/martina.png");
+
+function createPuzzle(containerId, imagePath) {
+  const container = document.getElementById(containerId);
+  let positions = [...Array(totalPieces).keys()];
   shuffleArray(positions);
-
-  container.innerHTML = "";
 
   positions.forEach((pos, i) => {
     const piece = document.createElement("div");
     piece.classList.add("piece");
+    piece.style.backgroundImage = `url("${imagePath}")`;
     piece.style.backgroundPosition = `${-(pos % size) * 100}px ${-Math.floor(pos / size) * 100}px`;
     piece.dataset.index = i;
     piece.dataset.correct = pos;
 
-    piece.addEventListener("click", () => onPieceClick(i));
+    piece.addEventListener("click", () => onPieceClick(containerId, i));
     container.appendChild(piece);
   });
 }
 
-let firstClick = null;
+let currentSelection = {};
 
-function onPieceClick(index) {
-  if (firstClick === null) {
-    firstClick = index;
-    highlightPiece(index, true);
+function onPieceClick(containerId, index) {
+  const container = document.getElementById(containerId);
+  if (!currentSelection[containerId]) {
+    currentSelection[containerId] = index;
+    highlightPiece(container, index, true);
   } else {
-    swapPieces(firstClick, index);
-    highlightPiece(firstClick, false);
-    firstClick = null;
-    if (isSolved()) {
-      setTimeout(() => {
-        message.classList.remove("hidden");
-      }, 300);
+    swapPieces(container, currentSelection[containerId], index);
+    highlightPiece(container, currentSelection[containerId], false);
+    currentSelection[containerId] = null;
+
+    if (isSolved(container)) {
+      solved[containerId] = true;
+      if (solved.puzzle1 && solved.puzzle2) {
+        document.getElementById("message").classList.remove("hidden");
+      }
     }
   }
 }
 
-function highlightPiece(index, highlight) {
+function highlightPiece(container, index, highlight) {
   const piece = container.children[index];
   piece.style.border = highlight ? "2px solid #ff69b4" : "none";
 }
 
-function swapPieces(i, j) {
+function swapPieces(container, i, j) {
   const temp = container.children[i].style.backgroundPosition;
   container.children[i].style.backgroundPosition = container.children[j].style.backgroundPosition;
   container.children[j].style.backgroundPosition = temp;
@@ -57,7 +59,7 @@ function swapPieces(i, j) {
   container.children[j].dataset.correct = tempCorrect;
 }
 
-function isSolved() {
+function isSolved(container) {
   for (let i = 0; i < totalPieces; i++) {
     if (parseInt(container.children[i].dataset.correct) !== i) return false;
   }
@@ -70,5 +72,3 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
-createPuzzle();
